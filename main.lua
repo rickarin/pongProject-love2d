@@ -107,7 +107,6 @@ function love.draw()
 
     -- Placar
     love.graphics.print(tostring(jogador1Placar), VIRTUAL_WIDTH / 2 - 45, 0)
-    --love.graphics.print('x', VIRTUAL_WIDTH / 2 - 10, 0)
     love.graphics.print(tostring(jogador2Placar), VIRTUAL_WIDTH / 2 + 25, 0)
 
     push:finish()
