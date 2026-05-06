@@ -7,16 +7,15 @@ VIRTUAL_HEIGHT = 243
 VELOCIDADE = 200
 
 push = require 'push'
+class = require 'class'
+require 'bola'
+require 'Personagem'
 
 function love.load()
 
-    jogador1Y = 10
-    jogador2Y = VIRTUAL_HEIGHT - 30
-    bolaX = VIRTUAL_WIDTH / 2 -2
-    bolaY = VIRTUAL_HEIGHT / 2 - 2
-
-    bolaDX = math.random(2) == 1 and 100 or -100
-    bolaDY = math.random(-50, 50)
+    jogador1 = Personagem(10, 10, 5, 20)
+    jogador2 = Personagem(VIRTUAL_WIDTH - 15, VIRTUAL_HEIGHT - 30, 5, 20)
+    bola = Bola(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
     estadodoJogo = 'Start'
 
@@ -39,23 +38,29 @@ end
 function love.update(dt)
     -- Jogador 1 Movimentação
     if love.keyboard.isDown('w') then
-        jogador1Y = math.max(0, jogador1Y + (- VELOCIDADE * dt))
+        jogador1.dy = - VELOCIDADE
     elseif love.keyboard.isDown('s') then
-        jogador1Y = math.min(VIRTUAL_HEIGHT - 20, jogador1Y + VELOCIDADE * dt)
+        jogador1.dy = VELOCIDADE
+    else
+        jogador1.dy = 0
     end
 
     -- Jogador 2 Movimentação
     if love.keyboard.isDown('up') then
-        jogador2Y = math.max(0, jogador2Y + (- VELOCIDADE * dt))
+        jogador2.dy = - VELOCIDADE
     elseif love.keyboard.isDown('down') then
-        jogador2Y = math.min(VIRTUAL_HEIGHT - 20, jogador2Y + VELOCIDADE * dt)
+        jogador2.dy = VELOCIDADE
+    else
+        jogador2.dy = 0
     end
 
     -- Movimentação da Bola
     if estadodoJogo == 'Play' then
-        bolaX = bolaX + bolaDX * dt
-        bolaY = bolaY + bolaDY * dt
+        bola:update(dt)
     end
+
+    jogador1:update(dt)
+    jogador2:update(dt)
 end
 
 
@@ -72,13 +77,7 @@ function love.keypressed(key)
     else
             estadodoJogo = 'Start'
 
-            -- Posição Inicial da Bola
-            bolaX = VIRTUAL_WIDTH / 2 - 2
-            bolaY = VIRTUAL_HEIGHT / 2 - 2
-
-            -- Velocidade da Bola
-            bolaDX = math.random(2) == 1 and 100 or -100
-            bolaDY = math.random(-50, 50) * 1.5
+            bola:reset()
         end
     end
 end
@@ -98,13 +97,13 @@ function love.draw()
     jogador2Placar = 0
 
     -- Primeiro Retângulo
-    love.graphics.rectangle('fill', 10, jogador1Y, 5, 20)
+    jogador1:render()
 
     -- Segundo Retângulo
-    love.graphics.rectangle('fill', VIRTUAL_WIDTH - 15, jogador2Y, 5, 20)
+    jogador2:render()
 
     -- Bola
-    love.graphics.rectangle('fill', bolaX, bolaY, 4, 4)
+    bola:render()
 
     -- Placar
     love.graphics.print(tostring(jogador1Placar), VIRTUAL_WIDTH / 2 - 45, 0)
