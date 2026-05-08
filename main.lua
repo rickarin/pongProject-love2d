@@ -126,11 +126,15 @@ function love.update(dt)
         jogador1.dy = 0
     end
 
-    -- Jogador 2 Movimentação
-    if love.keyboard.isDown('up') then
-        jogador2.dy = -VELOCIDADE
-    elseif love.keyboard.isDown('down') then
-        jogador2.dy = VELOCIDADE
+    -- IA Enemy
+    -- Se a posição da bola estiver acima do Jogador
+    -- Então a IA vai para cima
+    if bola.y < jogador2.y then
+        jogador2.dy = -VELOCIDADE + 50
+    -- Se a posição da bola estiver abaixo do Jogador
+    -- Então a IA vai para baixo
+    elseif bola.y > jogador2.y then
+        jogador2.dy = VELOCIDADE - 50
     else
         jogador2.dy = 0
     end
