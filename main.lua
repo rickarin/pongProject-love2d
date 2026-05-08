@@ -126,17 +126,19 @@ function love.update(dt)
         jogador1.dy = 0
     end
 
+    margem = 5
+
     -- IA Enemy
     -- Se a posição da bola estiver acima do Jogador
     -- Então a IA vai para cima
-    if bola.y < jogador2.y then
-        jogador2.dy = -VELOCIDADE + 50
+    if math.abs(bola.y - jogador2.y) < margem then
+        jogador2.dy = 0
+    elseif bola.y < jogador2.y then
+        jogador2.dy = -VELOCIDADE + 65
     -- Se a posição da bola estiver abaixo do Jogador
     -- Então a IA vai para baixo
     elseif bola.y > jogador2.y then
-        jogador2.dy = VELOCIDADE - 50
-    else
-        jogador2.dy = 0
+        jogador2.dy = VELOCIDADE - 65
     end
 
     -- Movimentação da Bola
