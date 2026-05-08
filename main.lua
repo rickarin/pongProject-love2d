@@ -30,14 +30,24 @@ function love.load()
     smallFont = love.graphics.newFont('Montserrat-Regular.ttf', 14)
     fpsFont = love.graphics.newFont('Montserrat-Regular.ttf', 6)
 
+    sounds = {
+        ['colisao_parede'] = love.audio.newSource('sounds/Colisão_Parede.wav', 'static'),
+        ['ponto'] = love.audio.newSource('sounds/Ponto.wav', 'static'),
+        ['colisao_personagem'] = love.audio.newSource('sounds/Colisão_Personagem.wav', 'static')
+    }
+
     love.window.setMode(WINDOW_WIDTH, WINDOW_HEIGHT, {
-        resizable = false,
+        resizable = true,
         vsync = true,
         fullscreen = false
     })
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         upscale = 'normal'
     })
+end
+
+function love.resize(w, h)
+    push.resize(w, h)
 end
 
 function love.update(dt)
@@ -52,6 +62,7 @@ function love.update(dt)
             else
                 bola.dy = math.random(10, 150)
             end
+            sounds['colisao_personagem']:play()
         end
 
         -- Colisão da Bola com Jogador 2
@@ -64,23 +75,27 @@ function love.update(dt)
             else
                 bola.dy = math.random(10, 150)
             end
+            sounds['colisao_personagem']:play()
         end
 
         -- Colisão da Bola com as partes de cima e de baixo da Janela
         if bola.y <= 0 then
             bola.y = 0
             bola.dy = -bola.dy
+            sounds['colisao_parede']:play()
         end
 
         if bola.y >= VIRTUAL_HEIGHT - 4 then
             bola.y = VIRTUAL_HEIGHT - 4
             bola.dy = -bola.dy
+            sounds['colisao_parede']:play()
         end
     end
 
     -- Pontuação do Jogo
     if bola.x < 0 then
         jogador2Placar = jogador2Placar + 1
+        sounds['ponto']:play()
         if jogador2Placar == 3 then
             jogadorVencedor = 2
             estadodoJogo = 'Victory'
@@ -92,6 +107,7 @@ function love.update(dt)
 
     if bola.x > VIRTUAL_WIDTH then
         jogador1Placar = jogador1Placar + 1
+        sounds['ponto']:play()
         if jogador1Placar == 3 then
             jogadorVencedor = 1
             estadodoJogo = 'Victory'
